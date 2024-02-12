@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <script type="module">
+            import {
+                AuthType,
+                AuthStatus,
+                init,
+            } from 'https://cdn.jsdelivr.net/npm/@thoughtspot/visual-embed-sdk/dist/tsembed.es.js';
+            const params = new URLSearchParams(window.location.search);
+            debugger;
+            const authStatus = init({
+                thoughtSpotHost: params.get('host'),
+                username: params.get('username'),
+                authType: AuthType.TrustedAuthToken,
+                getAuthToken: () => params.get('authToken'),
+            });
+            authStatus.on(AuthStatus.SDK_SUCCESS, () => {
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://${params.get('host')}${window.location.search}#${params.get('path')}`;
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                document.body.appendChild(iframe);
+            });
+        </script>
+    </body>
+</html>
