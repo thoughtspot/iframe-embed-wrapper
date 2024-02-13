@@ -22,9 +22,16 @@
                 authType: AuthType.TrustedAuthToken,
                 getAuthToken: () => params.get('authToken'),
             });
+
+            const postHashUrlParams = [...params.entries()].reduce((acc, [key, value]) => {
+                if (key.startsWith('posthash__')) {
+                    acc.append(key.replace('posthash__', ''), value);
+                }
+                return acc;
+            }, new URLSearchParams());
             authStatus.on(AuthStatus.SDK_SUCCESS, () => {
                 const iframe = document.createElement('iframe');
-                iframe.src = `https://${params.get('host')}${window.location.search}#${params.get('path')}`;
+                iframe.src = `https://${params.get('host')}${window.location.search}#${params.get('path')}?${postHashUrlParams.toString()}`;
                 iframe.style.width = '100%';
                 iframe.style.height = '100%';
                 iframe.style.border = 'none';
